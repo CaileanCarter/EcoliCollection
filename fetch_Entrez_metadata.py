@@ -1,6 +1,9 @@
 from Bio import Entrez
 import numpy as np
 import pandas as pd
+from os import path
+
+from fasta_from_ena import get_FASTA, unzip_gz
 
 
 def fetch_id(term):
@@ -11,6 +14,7 @@ def fetch_id(term):
     if len(idlist) > 1:
         print(f"{term} returned more than 1 result")
     return idlist[0]
+
 
 def fetch_summary(id_num):
     esummary_handle = Entrez.esummary(db="assembly", id=id_num, report="full")
@@ -37,7 +41,7 @@ def fetch_all(term):
     return fetch_parts(summary)
 
 
-def fetch_sequence():
+def fetch_sequence(ena : pd.DataFrame, DIR : str):
     for index in ena[ena["FASTA"].isna()].index:
         id_num = fetch_id(index)
         summary = fetch_summary(id_num)
@@ -51,16 +55,15 @@ def fetch_sequence():
         if not ftp:
             continue
         link = ftp +"/"+ label+'_genomic.fna.gz'
-        print(link)
-
         ena.at[index, "FASTA"] = link
 
         get_FASTA(url=link, fp=zipped)
         unzip_gz(zipped, unzipped)
 
+    return ena
 
 
-def main(ena):
+def main(ena : pd.DataFrame):
     dump = {"AssemblyAccession" : [],
         "AssemblyStatus" : [],
         "WGS" : [],
@@ -73,7 +76,7 @@ def main(ena):
         for key, result in zip(dump.keys(), results):
             dump[key].append(result if result else np.NaN)
         
-    trial = pd.DataFrame(dump, index=ena.index)
-
-    return trial
+    result = pd.DataFrame(dump, index=ena.index)
+    ena = ena.merge(result, left_index=True, right_index=True)
+    return ena
 

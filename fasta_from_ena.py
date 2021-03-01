@@ -114,13 +114,15 @@ def main(*args, xml_fp=None, output=None, **kwargs):
         unzip_gz(taxon=unique_id, zin=zipped, zout=unzipped)
 
 
-parser = argparse.ArgumentParser(description=__doc__)
+def parse_arguments():
+    parser = argparse.ArgumentParser(description=__doc__)
 
-parser.add_argument('-i', '--input', type=str)
-parser.add_argument('-o', '--output', type=str)
+    parser.add_argument('-i', '--input', type=str)
+    parser.add_argument('-o', '--output', type=str)
 
-args = parser.parse_args()
+    args = parser.parse_args()
+    main(xml_fp=args.input, output=args.output)
 
 
 if __name__ == "__main__":
-    main(xml_fp=args.input, output=args.output)
+    parse_arguments()
