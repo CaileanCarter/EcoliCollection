@@ -6,7 +6,15 @@ from os import path
 from fasta_from_ena import get_FASTA, unzip_gz
 
 
+f"""
+fetch_Entrez_metadata.py
+
+This script is a continuation from fasta_from_ena.py and requires the 'ena' output from it.
+ena is a DataFrame containing results from ENA. This collection of scripts gathers extra information.
+"""
+
 def fetch_id(term):
+    """Given an accession or assembly name, fetch the assembly ID"""
     handle = Entrez.esearch(db="assembly", term=term)
     record = Entrez.read(handle)
     idlist = record["IdList"]
@@ -17,6 +25,7 @@ def fetch_id(term):
 
 
 def fetch_summary(id_num):
+    """Given an assembly ID, fetch the document summary from Entrez"""
     esummary_handle = Entrez.esummary(db="assembly", id=id_num, report="full")
     esummary_record = Entrez.read(esummary_handle, validate=False)
     summary = esummary_record['DocumentSummarySet']['DocumentSummary'][0]
@@ -25,6 +34,7 @@ def fetch_summary(id_num):
 
 
 def fetch_parts(summary):
+    """Picks out elements of the document summary from Entrez"""
     AssemblyAccession = summary["AssemblyAccession"]
     AssemblyStatus = summary["AssemblyStatus"]
     WGS = summary["WGS"]
@@ -42,6 +52,7 @@ def fetch_all(term):
 
 
 def fetch_sequence(ena : pd.DataFrame, DIR : str):
+    """"Fetch missing sequences from NCBI"""
     for index in ena[ena["FASTA"].isna()].index:
         id_num = fetch_id(index)
         summary = fetch_summary(id_num)
@@ -63,7 +74,8 @@ def fetch_sequence(ena : pd.DataFrame, DIR : str):
     return ena
 
 
-def main(ena : pd.DataFrame):
+def main(ena : pd.DataFrame) -> pd.DataFrame:
+    """Fetch metadata for Ecoli ENA collection"""
     dump = {"AssemblyAccession" : [],
         "AssemblyStatus" : [],
         "WGS" : [],
