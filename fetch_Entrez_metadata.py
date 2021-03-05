@@ -1,10 +1,14 @@
-from Bio import Entrez
+import xml.etree.ElementTree as ET
+from os import path
+
 import numpy as np
 import pandas as pd
-from os import path
+from Bio import Entrez
 
 from fasta_from_ena import get_FASTA, unzip_gz
 
+Entrez.api_key = ""
+Entrez.email = ""
 
 f"""
 fetch_Entrez_metadata.py
@@ -41,14 +45,9 @@ def fetch_parts(summary):
     Coverage = summary["Coverage"]
     SubmissionDate = summary["SubmissionDate"]
     LastUpdateDate = summary["LastUpdateDate"]
+    biosampleID = summary["BioSampleId"]
 
-    return AssemblyAccession, AssemblyStatus, WGS, Coverage, SubmissionDate, LastUpdateDate
-
-
-def fetch_all(term):
-    id_num = fetch_id(term)
-    summary = fetch_summary(id_num)
-    return fetch_parts(summary)
+    return AssemblyAccession, AssemblyStatus, WGS, Coverage, SubmissionDate, LastUpdateDate, biosampleID
 
 
 def fetch_sequence(ena : pd.DataFrame, DIR : str):
@@ -74,6 +73,46 @@ def fetch_sequence(ena : pd.DataFrame, DIR : str):
     return ena
 
 
+def fetch_sample(id_num):
+    esummary_handle = Entrez.esummary(db="biosample", id=id_num, report="full")
+    esummary_record = Entrez.read(esummary_handle, validate=False)
+    sampledata = ET.fromstring(esummary_record['DocumentSummarySet']['DocumentSummary'][0]["SampleData"])
+
+    result = [(x.text, x.attrib.get('attribute_name')) for x in sampledata.findall(".//Attribute")]
+    items = {
+        "isolation_source" : np.NaN,
+        "collection_date" : np.NaN,
+        "geo_loc_name" : np.NaN
+    }
+    for text, attr in result:
+        if attr in ('isolation_source', 'collection_date', 'geo_loc_name'):
+            items[attr] = text
+    
+    return items
+
+
+def fetch_biosample(ena : pd.DataFrame):
+    dump = {"isolation_source" : [],
+        "collection_date" : [],
+        "geo_loc_name" : []}
+
+    for sampleID in ena["biosampleID"].values:
+        items = fetch_sample(sampleID)
+
+        for key, value in items.items():
+            dump[key].append(value)
+
+    df = pd.DataFrame(dump, index=ena.index)
+    ena = ena.merge(df, left_index=True, right_index=True)
+    return ena
+
+
+def fetch_all_summary(term):
+    id_num = fetch_id(term)
+    summary = fetch_summary(id_num)
+    return fetch_parts(summary)
+
+
 def main(ena : pd.DataFrame) -> pd.DataFrame:
     """Fetch metadata for Ecoli ENA collection"""
     dump = {"AssemblyAccession" : [],
@@ -81,14 +120,17 @@ def main(ena : pd.DataFrame) -> pd.DataFrame:
         "WGS" : [],
         "Coverage" : [],
         "SubmissionDate" : [],
-        "LastUpdateDate" : []}
+        "LastUpdateDate" : [],
+        "biosampleID" : []}
 
     for index in ena.index:
-        results = fetch_all(index)
+        results = fetch_all_summary(index)
         for key, result in zip(dump.keys(), results):
             dump[key].append(result if result else np.NaN)
         
     result = pd.DataFrame(dump, index=ena.index)
     ena = ena.merge(result, left_index=True, right_index=True)
+    # ena = fetch_sequence(ena)
+    ena = fetch_biosample(ena)
     return ena
 
