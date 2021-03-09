@@ -223,7 +223,7 @@ def get_matches(allele, seq_list, fwd_primer, rev_primer, expected_size,
                     allow_partial=allow_partial
                 ))
 
-            elif: verbose: sys.stderr.write("  Only forward primer hit found\n")
+            elif verbose: sys.stderr.write("  Only forward primer hit found\n")
     
         elif coords_R is not None:
             if (
