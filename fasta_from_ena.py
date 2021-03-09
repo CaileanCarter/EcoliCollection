@@ -34,13 +34,13 @@ def open_xml(fp=None):
 
         try:
             unique_id = node.find('.//WGS_SET/PREFIX').text + '0' + node.find('.//WGS_SET/VERSION').text
-        except:
+        except AttributeError:
             unique_id = alias
 
         taxon = node.find('.//TAXON/SCIENTIFIC_NAME').text
         try:
             strain = node.find('.//TAXON/STRAIN').text
-        except:
+        except AttributeError:
             strain = np.NaN
 
         FASTA = np.NaN
@@ -107,7 +107,7 @@ def main(*args, xml_fp=None, output=None, **kwargs):
         
         try:
             get_FASTA(taxon=unique_id, url=url, fp=zipped)
-        except:
+        except FileNotFoundError:
             print(f"FASTA not available for {unique_id}")
             continue
         

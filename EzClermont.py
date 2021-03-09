@@ -4,7 +4,6 @@ import re
 import argparse
 import sys
 import os
-import unittest
 import itertools
 
 from Bio.Seq import Seq
@@ -224,9 +223,8 @@ def get_matches(allele, seq_list, fwd_primer, rev_primer, expected_size,
                     allow_partial=allow_partial
                 ))
 
-            else:
-                if verbose: sys.stderr.write("  Only forward primer hit found\n")
-                pass
+            elif: verbose: sys.stderr.write("  Only forward primer hit found\n")
+    
         elif coords_R is not None:
             if (
                     (strand == "+" and len(i.seq) - coords_R[0] < expected_size) or
@@ -246,9 +244,6 @@ def get_matches(allele, seq_list, fwd_primer, rev_primer, expected_size,
                 if verbose: sys.stderr.write("  Possible match on %s (%s) %d\n" % (i.id, strand, coords_R[0]))
             else:
                 if verbose: sys.stderr.write("  Only reverse primer hit found\n")
-        else:
-            # sys.stderr.write("No hits on %s" % i.id)
-            pass
     return(matches)
 
 
@@ -297,7 +292,7 @@ def refine_hits(hit, c_primers, e_primers, g_primers, cryptic_chu_primers, EC_co
     """
     if hit == "D/E":
         if verbose: sys.stderr.write("Clermont type is D/E; running ArpAgpE primers\n")
-        e_primers["arpA_e"], report_string = run_primer_pair(
+        e_primers["arpA_e"], _ = run_primer_pair(
             seqs=seqs, allele="arpA_e",
             vals=e_primers["arpA_e"],
             allow_partial=allow_partial)
@@ -307,7 +302,7 @@ def refine_hits(hit, c_primers, e_primers, g_primers, cryptic_chu_primers, EC_co
             return "D"
     elif hit == "E/cryptic":
         if verbose: sys.stderr.write("Clermont type is E/cryptic; running ArpAgpE primers\n")
-        e_primers["arpA_e"], report_string = run_primer_pair(
+        e_primers["arpA_e"], _ = run_primer_pair(
             seqs=seqs, allele="arpA_e",
             vals=e_primers["arpA_e"],
             allow_partial=allow_partial)
@@ -317,7 +312,7 @@ def refine_hits(hit, c_primers, e_primers, g_primers, cryptic_chu_primers, EC_co
             return "cryptic"
     elif hit == "A/C":
         if verbose: sys.stderr.write("Clermont type is A/C; running the trpAgpC primers\n")
-        c_primers["trpA_c"], report_string = run_primer_pair(
+        c_primers["trpA_c"], _ = run_primer_pair(
             seqs=seqs, allele="trpA_c",
             vals=c_primers["trpA_c"],
             allow_partial=allow_partial)
@@ -327,7 +322,7 @@ def refine_hits(hit, c_primers, e_primers, g_primers, cryptic_chu_primers, EC_co
             return "A"
     elif hit == "F/G" or hit == "B2/G":
         if verbose: sys.stderr.write("Clermont type is B2/F/G; running the ybgD primers\n")
-        g_primers["ybgD"], report_string = run_primer_pair(
+        g_primers["ybgD"], _ = run_primer_pair(
             seqs=seqs, allele="ybgD",
             vals=g_primers["ybgD"],
             allow_partial=allow_partial)
@@ -406,8 +401,7 @@ def ambig_to_regex(primer):
     return("".join(new_primer))
 
 
-def main(args=None):
-    verbose = False
+def main(args=None, verbose=False):
     if args is None:
         args = get_args()
     ####### Quadriplex PCR ########
@@ -437,8 +431,8 @@ def main(args=None):
     ybgD_F = ambig_to_regex("GTTGACTAARCGYAGGTCGA")
     ybgD_R = ambig_to_regex("KATGYDGCYGATKAAGGATC")
     # new primers for group F, not used
-    cfaB_f = ambig_to_regex("CTAACGTTGATGCTGCTCTG")
-    cfaB_r = ambig_to_regex("TATGCGGCTGATGAAGGATC")
+    # cfaB_f = ambig_to_regex("CTAACGTTGATGCTGCTCTG")
+    # cfaB_r = ambig_to_regex("TATGCGGCTGATGAAGGATC")
     # shigella primers for https://www.ncbi.nlm.nih.gov/pmc/articles/PMC106136/
     # also detects EIEC, though
     virA_f = "CTGCATTCTGGCAATCTCTTCACATC"
@@ -480,8 +474,8 @@ def main(args=None):
     allow_partial = False
     if len(seqs) > 4 and not args.no_partial:
         allow_partial = True
-    else:
-        if verbose: sys.stderr.write("rejecting potetial partial matches\n")
+
+    elif verbose: sys.stderr.write("rejecting potetial partial matches\n")
 
     # Start with the Control primers before trying anything else
     # these are used primarily for differentiating the C/E groups
@@ -559,13 +553,13 @@ def main(args=None):
     return(Clermont_type, profile)
 
 
-def cli_main():
-    """ all this does is gobble the results returned for the webapp
-    All the logging info is on stderr already
-    """
-    args = get_args()
-    cler_type, cler_profile = main(args)
-    sys.exit(0)
+# def cli_main():
+#     """ all this does is gobble the results returned for the webapp
+#     All the logging info is on stderr already
+#     """
+#     args = get_args()
+#     cler_type, cler_profile = main(args)
+#     sys.exit(0)
 
 
 if __name__ == "__main__":

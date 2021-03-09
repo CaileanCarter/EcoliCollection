@@ -16,7 +16,7 @@ def phylo(x):
         p = open(path.join(DIR, f"{x}.txt")).readlines()[-1]
         result = p.split()[1]
         return result
-    except:
+    except FileNotFoundError:
         return np.NaN
 
 
@@ -29,7 +29,7 @@ def ectype(x):
     PATH = path.join(DIR, f"{x}.tabular")
     try:
         result = open(PATH).readlines()[-1].split()
-    except:
+    except FileNotFoundError:
         return np.NaN
     
     Otype = result[1]
