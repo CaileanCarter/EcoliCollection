@@ -3,7 +3,11 @@
 # EcoliCollection
 Scripts used for handling my E coli assemblies collection
 
-This is working progress:
-[ ] Tidy scripts
-[ ] Add docstrings
-[ ] Whatever else needs doing
+This is working progress:<br>
+- [ ] Tidy scripts
+- [ ] Add docstrings
+- [x] Make changes to EzClermont
+- [ ] Finish README
+- [ ] Include tutorial
+- [ ] Trialed and tested
+- [ ] CLI support
