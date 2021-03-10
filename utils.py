@@ -67,7 +67,7 @@ def main(fp, phylo, sero, script=None):
         to_excel(ena, fp)
 
     if sero:
-        ena = fetch_serotype(ena, fp)
+        ena = fetch_serotype(ena, sero)
         to_excel(ena, fp)
 
 
@@ -77,8 +77,8 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description=__doc__)
 
     parser.add_argument('-i', '--input', type=str)
-    parser.add_argument('-s', '--serotype', type=str)
-    parser.add_argument('-p', '--phylo', type=str)
+    parser.add_argument('-s', '--serotype', type=str, default=False)
+    parser.add_argument('-p', '--phylo', type=bool, default=False)
     parser.add_argument('--script', type=str, default="EzClermont.py")
 
     args = parser.parse_args()
