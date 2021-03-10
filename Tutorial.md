@@ -1,0 +1,11 @@
+# Tutorial
+
+1. Enter your search term into ENA search
+2. Select <b>Assembly</b> results
+3. Download ENA records: XML
+
+4. Create an output directory
+5. Run fasta_from_ena.py with XML file as input and directory created as output
+6. A summary Excel file is created from search result
+7. Wait for FASTA files to be downloaded and unzipped. This can take a while...
+8. Run fetch_Entrez_metadata with directory as positional argument (you can include Entrez API and your account email to speed up the run)
