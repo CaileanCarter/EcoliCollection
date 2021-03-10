@@ -14,3 +14,8 @@
 For serotyping:
 1. Use the Ectyper tool on Galaxy
 2. Download results into a folder
+3. Run utils.py with `-s` or `--sero` flag to input path for directory containing serotpe data. `--input` should be path for working directory
+
+For phylotyping:
+1. Run utils.py with `--input` flag for working directory and use `-p` or `--phylo` flag.
+2. Optionally, you can specify location of EzClermont.py script using `--script`, but script is included in package.
