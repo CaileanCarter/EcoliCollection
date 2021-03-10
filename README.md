@@ -11,3 +11,4 @@ This is working progress:<br>
 - [ ] Include tutorial
 - [ ] Trialed and tested
 - [ ] CLI support
+- [ ] Snakemake support

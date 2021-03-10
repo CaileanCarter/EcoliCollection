@@ -9,3 +9,8 @@
 6. A summary Excel file is created from search result
 7. Wait for FASTA files to be downloaded and unzipped. This can take a while...
 8. Run fetch_Entrez_metadata with directory as positional argument (you can include Entrez API and your account email to speed up the run)
+
+
+For serotyping:
+1. Use the Ectyper tool on Galaxy
+2. Download results into a folder

@@ -2,13 +2,13 @@
 
 import argparse
 import gzip
-from zlib import error as zlibError
 import shutil
 import urllib.request as request
-from urllib.error import URLError
 import xml.etree.ElementTree as ET
 from contextlib import closing
 from os import path, remove
+from urllib.error import URLError
+from zlib import error as zlibError
 
 import numpy as np
 import pandas as pd
