@@ -55,10 +55,21 @@ def fetch_serotype(ena : pd.DataFrame, fp):
     return ena
 
 
+def main(fp, phylo, sero, script=None):
 
-def main():
+    ena_fp = path.join(fp, "summary.xlsx")
+    ena = pd.read_excel(ena_fp, index_col=0)
 
-    pass
+    if phylo:
+        run_phylo(fp, script=script)
+        out = path.join(fp, "phylo")
+        ena = fetch_phylogroup(ena, out)
+        to_excel(ena, fp)
+
+    if sero:
+        ena = fetch_serotype(ena, fp)
+        to_excel(ena, fp)
+
 
 
 def parse_arguments():
@@ -68,12 +79,10 @@ def parse_arguments():
     parser.add_argument('-i', '--input', type=str)
     parser.add_argument('-s', '--serotype', type=str)
     parser.add_argument('-p', '--phylo', type=str)
+    parser.add_argument('--script', type=str, default="EzClermont.py")
 
     args = parser.parse_args()
-    main()
-
-    pass
-
+    main(args.input, args.phylo, args.serotype, args.script)
 
 
 if __name__ == "__main__":
