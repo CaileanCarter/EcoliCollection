@@ -2,8 +2,10 @@
 
 import argparse
 import gzip
+from zlib import error as zlibError
 import shutil
 import urllib.request as request
+from urllib.error import URLError
 import xml.etree.ElementTree as ET
 from contextlib import closing
 from os import path, remove
@@ -77,22 +79,27 @@ def open_xml(fp=None):
     return df
 
 
-def get_FASTA(taxon=None, url=None, fp=None):
+def get_FASTA(url=None, fp=None):
     with closing(request.urlopen(url)) as r, open(fp, 'wb') as f:
         shutil.copyfileobj(r, f)
 
 
-def unzip_gz(taxon=None, zin=None, zout=None):
-    with gzip.open(zin, 'rb') as f_in, open(zout, 'wb') as f_out:
-        shutil.copyfileobj(f_in, f_out)
+def unzip_gz(zin=None, zout=None):
+    try:
+        with gzip.open(zin, 'rb') as f_in, open(zout, 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
+    except zlibError:
+        print(f"File could not be unzipped: {zin}")
+        return
     remove(zin)
 
 
 def to_excel(df=None, fp=None):
+    fp = path.join(fp, "summary.xlsx")
     df.to_excel(fp)
 
 
-def main(*args, xml_fp=None, output=None, **kwargs):
+def main(xml_fp=None, output=None):
 
     df = open_xml(fp=xml_fp)
 
@@ -106,12 +113,12 @@ def main(*args, xml_fp=None, output=None, **kwargs):
         zipped = unzipped + ".gz"
         
         try:
-            get_FASTA(taxon=unique_id, url=url, fp=zipped)
-        except FileNotFoundError:
+            get_FASTA(url=url, fp=zipped)
+        except (AttributeError, URLError):
             print(f"FASTA not available for {unique_id}")
             continue
         
-        unzip_gz(taxon=unique_id, zin=zipped, zout=unzipped)
+        unzip_gz(zin=zipped, zout=unzipped)
 
 
 def parse_arguments():
