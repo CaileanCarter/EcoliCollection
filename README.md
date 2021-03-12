@@ -49,5 +49,6 @@ This is working progress:<br>
 - [x] Include tutorial
 - [x] Trialed and tested
 - [x] CLI support
-- [ ] Snakemake support
+- [x] Snakemake support
+- [x] conda support
 - [ ] Have Excel spreadsheet by put in parent directory instead of FASTA directory
