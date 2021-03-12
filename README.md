@@ -1,5 +1,6 @@
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/CaileanCarter/EcoliCollection.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/CaileanCarter/EcoliCollection/alerts/)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/CaileanCarter/EcoliCollection.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/CaileanCarter/EcoliCollection/context:python)
+
 # EcoliCollection
 Scripts used for handling my E coli assemblies collection
 
@@ -24,6 +25,20 @@ For phylotyping:
 1. Run utils.py with `--input` flag for working directory and use `-p` or `--phylo` flag.
 2. Optionally, you can specify location of EzClermont.py script using `--script`, but script is included in package.
 
+## Conda support
+1. Run `setup_conda` script in command-line 
+or
+1. Run:
+```
+$ conda env create --name ecoli-collection --file environment.yaml
+$ conda activate ecoli-collection
+```
+
+## Snakemake support
+1. Have XML file in EcoliCollection directory
+2. Rename XML file to `ena_genome_assembly.xml`
+3. Run `snakemake --cores 1`
+
 ---
 
 This is working progress:<br>
@@ -35,3 +50,4 @@ This is working progress:<br>
 - [ ] Trialed and tested
 - [x] CLI support
 - [ ] Snakemake support
+- [ ] Have Excel spreadsheet by put in parent directory instead of FASTA directory

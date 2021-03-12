@@ -6,7 +6,7 @@ import shutil
 import urllib.request as request
 import xml.etree.ElementTree as ET
 from contextlib import closing
-from os import path, remove
+from os import path, remove, mkdir
 from urllib.error import URLError
 from zlib import error as zlibError
 
@@ -100,6 +100,10 @@ def to_excel(df=None, fp=None):
 
 
 def main(xml_fp=None, output=None):
+
+
+    if not path.isdir("FASTA"):
+        mkdir("FASTA")
 
     df = open_xml(fp=xml_fp)
 
