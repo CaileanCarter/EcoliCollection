@@ -42,12 +42,12 @@ $ conda activate ecoli-collection
 ---
 
 This is working progress:<br>
-- [ ] Tidy scripts
-- [ ] Add docstrings
+- [x] Tidy scripts
+- [x] Add docstrings
 - [x] Make changes to EzClermont
 - [ ] Finish README
 - [x] Include tutorial
-- [ ] Trialed and tested
+- [x] Trialed and tested
 - [x] CLI support
 - [ ] Snakemake support
 - [ ] Have Excel spreadsheet by put in parent directory instead of FASTA directory
