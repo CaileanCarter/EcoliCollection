@@ -55,6 +55,13 @@ def fetch_serotype(ena : pd.DataFrame, fp):
     return ena
 
 
+def fetch_sequence_type(ena: pd.DataFrame, fp: str):
+    mlst = pd.read_table(fp, index_col=0, names=["index","ST"], usecols=[0, 2])
+    mlst.index = mlst.index.str.replace(".fasta", "")
+    ena = ena.merge(mlst, left_index=True, right_index=True)
+    return ena
+
+
 def main(fp, phylo, sero, script=None):
 
     ena_fp = path.join(fp, "summary.xlsx")
