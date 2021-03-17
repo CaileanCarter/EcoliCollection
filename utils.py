@@ -62,7 +62,7 @@ def fetch_sequence_type(ena: pd.DataFrame, fp: str):
     return ena
 
 
-def main(fp, phylo, sero, script=None):
+def main(fp, phylo, sero, st, script=None):
 
     ena_fp = path.join(fp, "summary.xlsx")
     ena = pd.read_excel(ena_fp, index_col=0)
@@ -77,6 +77,10 @@ def main(fp, phylo, sero, script=None):
         ena = fetch_serotype(ena, sero)
         to_excel(ena, fp)
 
+    if st:
+        fetch_sequence_type(ena, st)
+        to_excel(ena, fp)
+
 
 
 def parse_arguments():
@@ -86,10 +90,11 @@ def parse_arguments():
     parser.add_argument('-i', '--input', type=str)
     parser.add_argument('-s', '--serotype', type=str, default=False)
     parser.add_argument('-p', '--phylo', type=bool, default=False)
+    parser.add_argument('-t', '--st', type=str, default=False)
     parser.add_argument('--script', type=str, default="EzClermont.py")
 
     args = parser.parse_args()
-    main(args.input, args.phylo, args.serotype, args.script)
+    main(args.input, args.phylo, args.serotype, args.st,script=args.script)
 
 
 if __name__ == "__main__":

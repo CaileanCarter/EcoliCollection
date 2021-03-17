@@ -40,4 +40,13 @@ rule serotype:
         "serodata.txt"
     shell:
         "python utils.py -i {input.fasta} -s {input.serotype}"
+
+rule sequence_type:
+    input:
+        fasta = "FASTA",
+        mlst = "MLST.tabular"
+    output:
+        "mlst.txt"
+    shell:
+        "python utils.py -i {input.fasta} -t {input.mlst}"
     
