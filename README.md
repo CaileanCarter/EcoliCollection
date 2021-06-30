@@ -2,19 +2,20 @@
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/CaileanCarter/EcoliCollection.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/CaileanCarter/EcoliCollection/context:python)
 
 # EcoliCollection
-Scripts used for handling my E coli assemblies collection
+Scripts used for handling and analysing my E. coli genome assembly collection.
+
+The workflow starts by pulling genome assemblies from ENA using a saved search result from the site.
 
 ## Tutorial
 
-1. Enter your search term into ENA search
+1. Enter a search term into ENA search
 2. Select <b>Assembly</b> results
 3. Download ENA records: XML
-
 4. Create an output directory
 5. Run fasta_from_ena.py with XML file as input and directory created as output
 6. A summary Excel file is created from search result
 7. Wait for FASTA files to be downloaded and unzipped. This can take a while...
-8. Run fetch_Entrez_metadata with directory as positional argument (you can include Entrez API and your account email to speed up the run)
+8. Run fetch_Entrez_metadata.py with directory as positional argument (you can include Entrez API and your account email to speed up the run)
 
 For serotyping:
 1. Use the Ectyper tool on Galaxy
